@@ -15,7 +15,7 @@ table{
     border-radius: 0.5em;
     color: rgb(255, 255, 255);
     font-family: 'Bodoni Moda', serif;
-    margin-bottom: 1em;
+    margin-bottom: 2em;
 }
 td{
     padding: 0.5em;
@@ -32,11 +32,22 @@ tr{
     display: flex;
     align-items: center;
     justify-content: center;
-    margin: 20em 2em 2em;
+    margin: 15em 2em 2em;
+    border-radius: 1em;
+}
+#adminDiv{
+    background: rgb(173, 141, 126);
+    background: linear-gradient(0deg, rgb(172, 173, 126) 0%, rgb(124, 124, 124) 100%);
+    height: 20em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 12em 2em 2em;
     border-radius: 1em;
 }
 
-#user, #pass {
+
+#user, #pass, #categAdd, #delUser {
     background-color: #fff;
     height: 31px;
     padding: 3px 7px;
@@ -58,7 +69,7 @@ tr{
     box-shadow: 0 0 3px 2px rgba(17, 42, 228, 0.5);
 }
 
-#submit, #login, #logout {
+#submit, #login, #logout, #delUserBut, #addCategory {
 
     display: inline-block;
     outline: 0;

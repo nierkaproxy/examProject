@@ -1,3 +1,17 @@
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.17.2/firebase-app.js";
+import {
+  getDatabase,
+  ref,
+  get,
+  set,
+  child
+} from "https://www.gstatic.com/firebasejs/9.17.2/firebase-database.js";
+
+import { firebaseConfig } from "./firebase.js";
+const app = initializeApp(firebaseConfig);
+const database = getDatabase();
+const dbref = ref(database);
+
 const body = document.querySelector("body");
 
 const adsPage = (e) => {
@@ -9,12 +23,14 @@ const adsPage = (e) => {
       <div class="col-sm-12 col-md-6">
         <form class="px-3">
           <div class="mb-3">
-            <label for="enterID" class="form-label text-secondary">Ad Code</label>
+            <label for="enterID" class="form-label text-secondary">Select Category</label>
             <select class="form-select" id="enterID" aria-label="Default select example">
                 <option selected>Select a category</option>
                 <option value="Computers">Computers</option>
                 <option value="Phones">Phones</option>
-                <option value="TV's">TV's</option>
+                <option value="TV's">TV's</option>`
+                get(child(dbref,  'Categories/'));
+                `
             </select>
           </div>
           <div class="mb-3">
@@ -45,10 +61,10 @@ const adsPage = (e) => {
       </div>
       <div class="col-sm-12 col-md-6">
         <div class="row">
-          <h5 class="text-center text-secondary">Find Ad by Code</h5>
+          <h5 class="text-center text-secondary">Find Ad by Category</h5>
           <form class="px-3" id="forma">
             <div class="mb-3">
-              <label for="findID" class="form-label text-secondary">Ad Code</label>
+              <label for="findID" class="form-label text-secondary">Ad Category</label>
               <select class="form-select" id="findID" aria-label="Default select example">
                 <option selected>Select a category</option>
                 <option value="Computers">Computers</option>

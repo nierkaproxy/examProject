@@ -17,7 +17,7 @@ const app = initializeApp(firebaseConfig);
 
 const database = getDatabase();
 let enterIDValue = '';
-
+const idArray = []; 
 const insertFunc = () => {
   let enterID = document.getElementById("enterID");
   let enterName = document.getElementById("enterName");
@@ -35,6 +35,7 @@ const insertFunc = () => {
   let findBtn = document.getElementById("find");
 
 
+
   const insert = (e) => {
     e.preventDefault();
     if (enterID.value.length < 3) {
@@ -50,8 +51,12 @@ const insertFunc = () => {
       alert("Product Price laukelis negali buti tuscias");
       return;
     }
-    const newRef = push(ref(database, enterID.value));
-    set(newRef, {
+    let id = "id" + Math.random().toString(16).slice(2);
+    console.log(id);
+    idArray.push(id);
+    console.log(idArray);
+    localStorage.setItem("ids", JSON.stringify(idArray));
+    set(ref(database, enterID.value + id), {
       ID: enterID.value,
       Name: enterName.value,
       Quantity: enterQuantity.value,
@@ -81,43 +86,56 @@ const insertFunc = () => {
       alert("Product Code laukelyje turi buti bent 3 symboliai!");
       return;
     }
-    get(child(dbref + findID.value)).then((snapshot) => {
-      if (snapshot.exists()) {
-        let table = document.createElement("table");
+    let storedIds = JSON.parse(localStorage.getItem("ids"));
+console.log(storedIds);
 
-        const data = [
+
+  const promises = storedIds.map(id => {
+    return get(child(dbref, findID.value + id));
+  });
+
+  Promise.all(promises).then((snapshots) => {
+    const data = snapshots.map((snapshot) => {
+      if (snapshot.exists()) {
+        return [
           { label: 'Product Name', value: snapshot.val().Name },
           { label: 'Quantity', value: snapshot.val().Quantity },
           { label: 'Price', value: snapshot.val().Price },
           { label: 'Description', value: snapshot.val().Description },
           { label: 'Image', value: `<img src="${snapshot.val().Image}">` }
         ];
-  
-        data.forEach((item) => {
-          
-          let row = document.createElement('tr');
-          let labelCell = document.createElement('td');
-          let valueCell = document.createElement('td');
-          labelCell.innerText = item.label + ': ';
-          valueCell.innerHTML = item.value;
-          row.appendChild(labelCell);
-          row.appendChild(valueCell);
-          table.appendChild(row);
-        });
-  
-        findData.appendChild(table);
       } else {
-        alert("No data found");
+        return null;
       }
-    }).catch((error) => {
-      alert(error);
-    });
-  
-    document.getElementById("forma").reset();
-  };
-  
-  findBtn.addEventListener("click", find);
+    }).filter(Boolean).flat();
 
+    if (data.length > 0) {
+      let table = document.createElement("table");
+      
+      data.map((item) => {
+        let row = document.createElement('tr');
+        let labelCell = document.createElement('td');
+        let valueCell = document.createElement('td');
+        labelCell.innerText = item.label + ': ';
+        valueCell.innerHTML = item.value;
+        row.appendChild(labelCell);
+        row.appendChild(valueCell);
+        table.appendChild(row);
+      
+
+      });
+      findData.appendChild(table);
+    } else {
+      alert("No data found");
+    }
+  }).catch((error) => {
+    alert(error);
+  });
+
+  document.getElementById("forma").reset();
+}
+
+findBtn.addEventListener("click", find);
 
   const removeData = (e) => {
     e.preventDefault();
@@ -150,3 +168,4 @@ const insertFunc = () => {
   removeBtn.addEventListener("click", removeData);
 };
 export { insertFunc };
+// localStorage.clear();
